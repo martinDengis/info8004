@@ -75,7 +75,7 @@ class: middle
 .center.width-65[![](./figures/prompt_examples.png)]
 
 - **What**: Return a valid segmentation mask for *any* prompt
-- **Prompt Types**: Points & bounding boxes (*sparse prompts*), masks (*dense prompts*), text (POC).
+- **Prompt Types**: Points & bounding boxes (*sparse prompts*), masks (*dense prompts*), text (PoC).
 - **Validity**: Even *ambiguous* prompts should yield reasonable masks
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
@@ -299,7 +299,6 @@ count: false
 
 ---
 class: middle
-count: false
 
 .center.width-85[![](figures/iou.png)]
 .center.italic[Intersection over Union (~confidence score)]
