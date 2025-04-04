@@ -204,7 +204,7 @@ Vision Transformer (ViT-H/16) Pre-trained with MAE
 
 ---
 
-class: middle
+class: top
 
 ## Prompt Encoder
 
@@ -213,10 +213,16 @@ class: middle
 - *Points*: positional encoding + learned embedding (foreground/background)
 - *Boxes*: two points (top-left, bottom-right) with positional encoding
 <!-- - Text: CLIP text encoder (proof-of-concept) -->
+---
+count:false
 
-???
+## Prompt Encoder
 
-- Text prompts: CLIP text encoder (proof-of-concept)
+### Sparse Prompts (points & boxes)
+
+- *Points*: positional encoding + learned embedding (foreground/background)
+- *Boxes*: two points (top-left, bottom-right) with positional encoding
+<!-- - Text: CLIP text encoder (proof-of-concept) -->
 
 ### Dense Prompts (*masks*)
 
@@ -232,6 +238,8 @@ class: middle
 
 - Mask is basically another image: so we encode then add to the existing image embedding
 - The multi-modal prompt encoder is what makes SAM so flexible. By converting different types of prompts into a common embedding space, the model can adapt to various input modalities.
+-
+- Text prompts: CLIP text encoder (proof-of-concept)
 
 ---
 

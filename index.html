@@ -25,7 +25,16 @@
         }
 
         var options = {sourceUrl: getParameterByName("p"),
-                       highlightStyle: "tomorrow"};
+                       highlightStyle: "tomorrow",
+                       slideNumberFormat: (current, total) => `
+                        <div style="position: fixed; bottom: 0; left: 0; right: 0; height: 43px; display: block; width: 100%;">
+                            <div style="color: black; font-size: 11px; text-align: right; padding-right: 30px; padding-top: 5px; position: relative;">
+                              ${current}/${total}
+                            </div>
+                            <div style="width: ${current/total*100}%; height: 5px; background-color: #377ff6; display: block; margin-top: 17px">
+                            </div>
+                        </div>
+                      `};
 
         var renderMath = function() {
             renderMathInElement(document.body, {delimiters: [ // mind the order of delimiters(!?)
@@ -35,20 +44,8 @@
                 {left: "\\(", right: "\\)", display: false},
             ]});
         }
-      // var slideshow = remark.create(options, renderMath);
-      var slideshow = remark.create({
-        ...options,
-        renderMath,
-      slideNumberFormat: (current, total) => `
-        <div style="position: fixed; bottom: 0; left: 0; right: 0; height: 43px; display: block; width: 100%;">
-            <div style="color: black; font-size: 11px; text-align: right; padding-right: 30px; padding-top: 5px; position: relative;">
-              ${current}/${total}
-            </div>
-            <div style="width: ${current/total*100}%; height: 5px; background-color: #377ff6; display: block; margin-top: 17px">
-            </div>
-        </div>
-      `
-    });
+
+      var slideshow = remark.create(options, renderMath);
 
     </script>
   </body>
