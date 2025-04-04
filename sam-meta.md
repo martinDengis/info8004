@@ -214,6 +214,10 @@ class: middle
 - *Boxes*: two points (top-left, bottom-right) with positional encoding
 <!-- - Text: CLIP text encoder (proof-of-concept) -->
 
+???
+
+- Text prompts: CLIP text encoder (proof-of-concept)
+
 ### Dense Prompts (*masks*)
 
 - Input at 1/4 resolution of image (256×256)
@@ -226,7 +230,7 @@ class: middle
 
 ???
 
-- Draw on the board
+- Mask is basically another image: so we encode then add to the existing image embedding
 - The multi-modal prompt encoder is what makes SAM so flexible. By converting different types of prompts into a common embedding space, the model can adapt to various input modalities.
 
 ---
@@ -238,7 +242,7 @@ class: middle
 ???
 
 - A 2-layer modified transformer decoder
-- Modified to be lightweight (real-time interaction
+- Modified to be lightweight (real-time interaction)
 
 ---
 class: middle
@@ -352,7 +356,8 @@ class: middle
 
 ???
 
-The training approach is designed to mimic real-world interactive segmentation workflows. By having the model learn from its own errors through iterative refinement, it becomes more robust to various prompt types and ambiguous situations.
+- Skip slide?
+- The training approach is designed to mimic real-world interactive segmentation workflows. By having the model learn from its own errors through iterative refinement, it becomes more robust to various prompt types and ambiguous situations.
 
 ---
 class: middle
