@@ -5,7 +5,7 @@ body {
     font-family:  'Poppins', 'Montserrat', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-weight: 300;
     line-height: 1.5;
-    color: black;
+    color: #02394A;
     font-size: 11pt;
     word-wrap: break-word;
 }
@@ -462,6 +462,27 @@ td {
     border-top: solid 0px;
 }
 
+.blue-slide {
+    background-color: #377ff6;
+    color: white !important;
+    border-top: solid 0px;
+}
+
+.blue-slide h1,
+.blue-slide h2,
+.blue-slide h3,
+.blue-slide p,
+.blue-slide li,
+.blue-slide .remark-slide-number {
+    color: white !important;
+}
+
+.blue-slide .footnote,
+.blue-slide .footnote:before {
+    color: white;
+    opacity: 0.9;
+}
+
 .red-slide {
     background-color: red;
     color: white;
@@ -471,4 +492,107 @@ td {
 .shadow {
     background-color: rgba(0,0,0,0.75);
     padding: 10px;
+}
+
+.custom-title h1 {
+  font-size: 2em; /* Same size as h1 in your current CSS */
+  font-weight: bold;
+  color: #377ff6; /* Choose your custom color here */
+  margin: 0 0 .5em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.custom-title.middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+/* Add this at the end of your style.css file */
+.remark-slide-content h2 {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #377ff6;
+  border-bottom: 2px solid #377ff6;
+  padding-bottom: 3px;
+}
+
+/* Adjust vertical spacing when h2 is present */
+.remark-slide-content.has-header {
+  padding-top: 60px;  /* Add space at the top for the header */
+}
+
+/* Fix for custom-title class to avoid interference */
+.custom-title h2 {
+  position: static !important;
+  color: inherit;
+  border-bottom: none;
+}
+
+/* Section indicator - top left corner header */
+.section-indicator::before {
+  content: attr(data-section-name);
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+  opacity: 0.8;
+  border-bottom: 2px solid #377ff6;
+  padding-bottom: 2px;
+}
+
+/* Adjust vertical spacing when section indicator is present */
+.remark-slide-content.has-header {
+  padding-top: 60px;  /* Add space at the top for the header */
+}
+
+/* Make sure h2 appears in top left for normal slides */
+.remark-slide-content.has-header h2 {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #02394A;
+  border-bottom: 2px solid #02394A;
+  padding-bottom: 3px;
+}
+
+/* Exception for custom-title class */
+.custom-title h2 {
+  position: static !important;
+  color: inherit;
+  border-bottom: none;
+}
+
+/* Fix for custom-title class to maintain central alignment */
+.custom-title h1 {
+  position: static !important;
+  display: block;
+  text-align: center;
+}
+
+/* Better handling of custom-title and section-indicator conflict */
+.custom-title.section-indicator::before {
+  display: none;
+}
+
+/* Avoid duplicate padding-top declaration */
+.remark-slide-content.has-header {
+  padding-top: 60px;  /* Add space at the top for the header */
+}
+
+/* Make custom-title respect headers but maintain its styling */
+.custom-title.has-header h1 {
+  margin-top: 20px;
 }

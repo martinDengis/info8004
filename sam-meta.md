@@ -1,6 +1,9 @@
 class: middle, center, title-slide
+count: false
+
 
 # Segment Anything Model - SAM
+Kirillov et al. 2023
 
 .center[.width-45[![](./figures/Meta_lockup_positive primary_RGB.png)]]
 
@@ -23,28 +26,147 @@ class: middle
 
 ---
 class: middle
+count: false
+
 
 # Background Knowledge
 
+
+---
+class: middle, has-header
 ## Segmentation
 
-.center.stretch[
+<!-- .center.stretch[
      ![](figures/segmentation_masks_1.png)
      ![](figures/segmentation_masks_2.png)
      ![](figures/segmentation_masks_3.png)
 ]
 
-.footnote[Adapted from [Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+.footnote[Adapted from [Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023] -->
+
+# Segmentation is the task of partitioning an image, at the pixel level, into regions.
+
+???
+
+Segmentation is the task of partitioning an image, at the pixel level, into regions.
+
+Segmentation is crucial for various applications, including object detection, scene understanding, medical imaging, and autonomous driving. It helps in identifying and isolating objects of interest within an image, enabling further analysis or processing.
 
 ---
-class: middle
+class: middle, section-indicator, has-header
+data-section-name: "Segmentation"
+
+## Segmentation
+
+.center[
+.width-100[
+![Segmentation types](./figures/image-segmentation.gif)
+]
+]
+
+.footnote[Adapted from [v7labs](https://www.v7labs.com/blog/image-segmentation-guide).]
+
+???
+
+Image segmentation tasks can be classified into three groups based on the amount and type of information they convey. 
+
+While semantic segmentation segments out a broad boundary of objects belonging to a particular class, instance segmentation provides a segment map for each object it views in the image, without any idea of the class the object belongs to. 
+
+Panoptic segmentation is by far the most informative, being the conjugation of instance and semantic segmentation tasks. It gives us the segment maps of all the objects of any particular class present in the image.
+
+---
+class: middle, has-header
 
 ## Encoder-Decoder Architecture
 
-## Zero-shot Learning
+.center[
+.width-100[
+![Endoder-Decoder Architecture](./figures/encoder-decoder.png)
+]
+]
+
+.footnote[Credits: [CS231n, Lecture 11](https://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
+
+
+???
+
+Encoder-decoder architectures form the backbone of many state-of-the-art image segmentation techniques, including the Segment Anything model proposed by Kirillov et al. from Meta. At a high level, these models consist of two key components:
+
+Encoder: progressively reduces spatial resolution while capturing increasingly abstract and semantic-rich representations of the input image. This process, known as downsampling, typically employs convolutional layers with pooling or strided convolutions, extracting high-level features necessary for segmentation tasks.
+
+Decoder: reconstructs a segmentation map by progressively restoring spatial resolution to match the original input dimensions. This upsampling step often uses techniques like transpose convolutions, interpolation methods, or learned deconvolutions to generate precise pixel-level predictions.
+
+Together, the encoder-decoder framework allows models to efficiently integrate both global context (captured in low resolution) and local details (restored in high resolution), resulting in accurate and detailed segmentation outputs.
+
+[Pointing to the Input Image (left side)]:
+"Let's start from the left, where we have our original input image, represented with dimensions 3 × H × W—meaning three color channels (Red, Green, Blue), and spatial dimensions height (H) and width (W)."
+
+[Moving to the Encoder section (red boxes)]:
+"The next step involves the encoder, which performs downsampling. You can see the progressive reduction in the spatial dimensions as we move deeper into the network:
+
+Initially, the resolution is reduced from H × W to H/2 × W/2, then further down to H/4 × W/4.
+
+At each step, the encoder applies operations like convolution combined with pooling or strided convolutions to capture more abstract, high-level features, essential for understanding the context of the image."
+
+[Highlighting the bottleneck (low-res representation)]:
+"At the lowest point, we have the most abstract representation—also called the bottleneck, with significantly reduced dimensions (H/4 × W/4). Here, the network encodes high-level information necessary for segmentation but at the cost of losing spatial details."
+
+[Moving to the Decoder section (blue boxes)]:
+"To restore these spatial details and produce a segmentation map, the decoder then performs upsampling. It gradually increases spatial dimensions, returning first to H/2 × W/2 and eventually back to the original H × W resolution.
+
+This step typically involves techniques like transpose convolutions or interpolation methods.
+
+The decoder combines the high-level semantic information from the encoder with spatial details, enabling precise pixel-wise classification."
+
+[Pointing to the Output Image (right side)]:
+"Finally, we obtain our predicted segmentation map, where each pixel of the original image is classified into a specific class (here, the cow in front, another cow behind, the grass, and the background). The output resolution matches the input (H × W), allowing us to precisely locate each object's boundaries."
 
 ---
+class: middle, has-header
+## Zero-shot Learning
 
+.center[
+.width-100[
+![Zero-Shot Learning](./figures/zsl.png)
+]
+]
+
+???
+
+Definition:
+
+Zero-shot learning (ZSL) is a machine learning technique where models are trained to recognize or classify objects they have never seen before. The model leverages its understanding of known classes to generalize to new, unseen classes without additional training.
+
+Why Zero-Shot?
+
+Limited Data: Annotating segmentation datasets is costly and time-consuming.
+
+Unseen Categories: Useful for rare, novel, or newly identified objects.
+
+Rapid Generalization: Quickly adapts to new semantic categories without explicit training.
+
+How Does It Work in Image Segmentation?
+
+Semantic Knowledge: Models use auxiliary information (text descriptions, attributes, embeddings) to understand unseen objects.
+
+Transfer Learning: Pre-trained encoders (like Vision Transformers or CNNs) generate embeddings representing images in a high-dimensional semantic space.
+
+Joint Embedding Space: Image embeddings are compared with semantic embeddings (e.g., text labels) to predict segmentation masks without direct examples.
+
+---
+class: middle, blue-slide
+count: false
+
+# Before diving into SAM's architecture
+---
+class: class: has-header
+## Quick Demo
+
+Let's see what it can do: 
+
+.center[DEMO]
+
+---
 class: middle
 
 # Paper Overview
@@ -64,17 +186,13 @@ All combined, they gave rise to the .bold[*Segment Anything Model (SAM)*] - .ita
 - Foundation model = promptable pre-trained model, that offers powerful generalization capabilities, to be used in a standalone manner or composed with other models for downstream tasks
 
 ---
-class: middle
+class: middle, has-header
 
-# Promptable Segmentation Task
-
----
-
-class: middle
+## Promptable Segmentation Task
 
 .center.width-65[![](./figures/prompt_examples.png)]
 
-- **What**: Return a valid segmentation mask for *any* prompt
+- **What**: Generate valid segmentation masks for *any* prompt
 - **Prompt Types**: Points & bounding boxes (*sparse prompts*), masks (*dense prompts*), text (PoC).
 - **Validity**: Even *ambiguous* prompts should yield reasonable masks
 
@@ -86,7 +204,9 @@ This is the foundation of SAM's approach - taking various forms of input prompts
 Heavily inspired from the next-token prediction task in NLP models.
 
 ---
-class: middle
+class: middle, has-header
+
+## Promptable Segmentation Task
 
 .question[Why Promptable Segmentation?]
 
@@ -104,7 +224,7 @@ Finally, it also solves for ambiguity (more on that later).
 This task design is critical because it allows the model to work as a foundation model rather than a task-specific one. The analogy with next-token prediction in language models helps understand how SAM generalizes beyond its training.
 
 ---
-class: middle
+class: middle, has-header
 
 ## From Promptable Task to Zero-Shot Transfer
 
@@ -129,7 +249,7 @@ The key innovation here is how the task design enables the model to generalize.
 - Then during inference, this learned relationship transfers to new data distributions and tasks by simply designing appropriate prompts.
 
 ---
-class: middle
+class: middle, has-header
 
 ## Relation to Existing Tasks
 
@@ -158,7 +278,9 @@ class: middle
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
 ---
-class: middle
+class: middle, has-header
+
+## Model Overview
 
 Three main components:
 
@@ -173,7 +295,7 @@ Three main components:
 
 ---
 
-class: middle
+class: middle, has-header
 
 ## Image Encoder
 
@@ -204,7 +326,7 @@ Vision Transformer (ViT-H/16) Pre-trained with MAE
 
 ---
 
-class: top
+class: top, has-header
 
 ## Prompt Encoder
 
@@ -214,7 +336,8 @@ class: top
 - *Boxes*: two points (top-left, bottom-right) with positional encoding
 <!-- - Text: CLIP text encoder (proof-of-concept) -->
 ---
-count:false
+class: top, has-header
+count: false
 
 ## Prompt Encoder
 
@@ -243,7 +366,7 @@ count:false
 
 ---
 
-class: middle
+class: middle, has-header
 
 ## Mask Decoder
 
@@ -274,7 +397,7 @@ class: middle
 - The token embeddings are padded with **output tokens**, which are subject to the same processing workflow for them to acquire semantic information about the image and the prompts!
 
 ---
-class: middle
+class: middle, has-header
 
 ## Handling Ambiguity
 
@@ -314,15 +437,22 @@ class: middle
 .footnote[[IdiotDeveloper](https://idiotdeveloper.com/what-is-intersection-over-union-iou/), 2023]
 
 ---
-
 class: middle
+count: false
+ 
 
 # Key Particularities
+
+---
+class: middle, has-header
 
 ## Promptable architecture
 
 <!-- Promptable as required for a foundation model -->
 <!-- 3D output to solve for ambiguity -->
+
+---
+class: middle, has-header
 
 ## Dissociated Encoders
 
@@ -330,7 +460,7 @@ class: middle
 <!-- Image embedding is cached for amortizing the cost -->
 
 ---
-class: middle
+class: middle, has-header
 
 ## Losses
 
@@ -349,7 +479,7 @@ class: middle
 - Dice loss = optimizes the overlap between predicted and ground truth masks
 
 ---
-class: middle
+class: middle, has-header
 
 ## Training Algorithm
 
@@ -367,24 +497,31 @@ class: middle
 - The training approach is designed to mimic real-world interactive segmentation workflows. By having the model learn from its own errors through iterative refinement, it becomes more robust to various prompt types and ambiguous situations.
 
 ---
-class: middle
+class: middle, has-header
 
 ## Zero-shot learning
 
 ---
-
 class: middle
+count: false
+
 
 # Discussion
 
+---
+class: middle, has-header
+
 ## Results
+
+---
+class: middle, has-header
 
 ## Limitations
 
 <!-- The need for caching the image embedding due to the heavy processing thereof limits the ability to be used as a true foundation model -->
 
 ---
-class: middle
+class: middle, has-header
 
 ## The Big Picture
 
