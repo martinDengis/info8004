@@ -1,8 +1,8 @@
 class: middle, center, title-slide
 count: false
 
+# Segment Anything
 
-# Segment Anything Model - SAM
 Kirillov et al. 2023
 
 .center[.width-45[![](./figures/Meta_lockup_positive primary_RGB.png)]]
@@ -28,12 +28,11 @@ class: middle
 class: middle
 count: false
 
-
 # Background Knowledge
-
 
 ---
 class: middle, has-header
+
 ## Segmentation
 
 <!-- .center.stretch[
@@ -44,7 +43,7 @@ class: middle, has-header
 
 .footnote[Adapted from [Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023] -->
 
-# Segmentation is the task of partitioning an image, at the pixel level, into regions.
+# Segmentation is the task of partitioning an image, at the pixel level, into regions
 
 ???
 
@@ -68,9 +67,9 @@ data-section-name: "Segmentation"
 
 ???
 
-Image segmentation tasks can be classified into three groups based on the amount and type of information they convey. 
+Image segmentation tasks can be classified into three groups based on the amount and type of information they convey.
 
-While semantic segmentation segments out a broad boundary of objects belonging to a particular class, instance segmentation provides a segment map for each object it views in the image, without any idea of the class the object belongs to. 
+While semantic segmentation segments out a broad boundary of objects belonging to a particular class, instance segmentation provides a segment map for each object it views in the image, without any idea of the class the object belongs to.
 
 Panoptic segmentation is by far the most informative, being the conjugation of instance and semantic segmentation tasks. It gives us the segment maps of all the objects of any particular class present in the image.
 
@@ -86,7 +85,6 @@ class: middle, has-header
 ]
 
 .footnote[Credits: [CS231n, Lecture 11](https://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
-
 
 ???
 
@@ -123,6 +121,7 @@ The decoder combines the high-level semantic information from the encoder with s
 
 ---
 class: middle, has-header
+
 ## Zero-shot Learning
 
 .center[
@@ -158,11 +157,13 @@ class: middle, blue-slide
 count: false
 
 # Before diving into SAM's architecture
+
 ---
 class: class: has-header
+
 ## Quick Demo
 
-Let's see what it can do: 
+Let's see what it can do:
 
 .center[DEMO VIDEO TO ADD]
 
@@ -248,6 +249,7 @@ class: middle, has-header
 
 .pull-right[
 **Zero-shot transfer**
+
 - Design appropriate prompts
 - Integrate with other models
 - .italic[Example: Object detector → box prompt → segmentation]
@@ -355,20 +357,12 @@ Vision Transformer (ViT-H/16) Pre-trained with MAE
   - **MAE (Masked Autoencoder)** is a **self-supervised learning** method.
   - It **masks** random patches of an image and trains the model to **reconstruct** them.
 
+- Windowed attention: local self-attention on a 14x14 subimage
+- 4 global attention blocks: for global context
+
 ---
 
 class: top, has-header
-
-## Prompt Encoder
-
-### Sparse Prompts (points & boxes)
-
-- *Points*: positional encoding + learned embedding (foreground/background)
-- *Boxes*: two points (top-left, bottom-right) with positional encoding
-<!-- - Text: CLIP text encoder (proof-of-concept) -->
----
-class: top, has-header
-count: false
 
 ## Prompt Encoder
 
@@ -396,18 +390,9 @@ count: false
 - Text prompts: CLIP text encoder (proof-of-concept)
 
 ---
-
 class: middle, has-header
 
 ## Mask Decoder
-
-???
-
-- A 2-layer modified transformer decoder
-- Modified to be lightweight (real-time interaction)
-
----
-class: middle
 
 - **Process**:
   1. Image embedding (64×64, 256-dimensional)
@@ -418,7 +403,7 @@ class: middle
   6. Cross-attention from image to tokens
 - **Upsampling**: 4× via transposed convolutions
 
-.center.width-90[![](figures/mask_decoder.png)]
+.center.width-85[![](figures/mask_decoder.png)]
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
@@ -470,7 +455,6 @@ class: middle
 ---
 class: middle
 count: false
- 
 
 # Key Particularities
 
@@ -479,7 +463,7 @@ class: middle, has-header
 
 ## Promptable architecture
 
-- **Foundation model approach**: SAM accepts various prompt types (points, boxes, masks, text)
+- **Foundation model approach**: Trained on vast, immense dataset and can fulfill a broad range of general tasks
 - **Flexible input prompts**: Handles single points, multiple points, bounding boxes, rough masks
 - **Ambiguity resolution**: Uses prompt ensembles to disambiguate when multiple valid segmentations exist
 - **Prompt engineering**: Different prompt combinations yield different valid segmentation results
@@ -517,11 +501,10 @@ class: middle, has-header
 class: middle, has-header
 
 ## Training Algorithm
+
 .center.width-100[
    ![Training Algorithm](./figures/train_algo.png)
   ]
-
-
 
 ???
 
@@ -544,8 +527,9 @@ Mask-Only Refinement Phase (Iterations 10-11):
 
 In the final iterations, the model uses the previously predicted mask as the sole prompt, without adding new points.
 This phase emphasizes autonomous refinement, teaching the model to improve its predictions without additional human guidance.
-It helps the model generalize and adapt, even when initial predictions are poor.
+It helps the model generalize and adapt, even when initial predictions are poor
 ---
+
 class: middle, has-header
 
 ## Losses
@@ -553,7 +537,7 @@ class: middle, has-header
 - **Focal Loss:** $$FL(p_t) = -\alpha(1 - p_t)^\gamma \log(p_t) \quad \quad $$
 .smaller-xx[(from Lin et al. 2018)]
 
-- **Dice Loss:** 
+- **Dice Loss:**
   $$DL(P, G) = 1 - \frac{2 \sum_i^N p_i g_i}{\sum_i^N p_i^2 + \sum_i^N g_i^2}$$
   .smaller-xx[(from Milletari et al. 2016)]
 
@@ -568,6 +552,7 @@ The training of SAM is guided by a combination of loss functions designed to add
 
 **Focal Loss:**
 with $\gamma = 2.0, \alpha = 0.25$
+
 - Focal Loss is designed to address the severe class imbalance between foreground and background pixels.
 - It modifies the standard cross-entropy loss to down-weight easy examples and focus on challenging ones, making it class-agnostic.
 - This helps the model pay more attention to boundary errors and other difficult regions.
@@ -611,29 +596,76 @@ class: middle, has-header
   - Performance varies by domain distance from training distribution
   - Struggles with highly specialized imagery without additional prompting
   - May require prompt engineering for optimal results in certain domains
+
 ---
 class: middle, has-header
 
 ## Zero-shot learning
 
+SAM was evaluated on several **zero-shot transfer** experiments to demonstrate its generality beyond promptable segmentation.
+
+1. Single-Point Mask Prediction
+2. Edge Detection
+3. Object Proposals
+4. Instance Segmentation
+5. Text-to-Mask (Proof of Concept)
+
 ---
 class: middle
-count: false
-
 
 # Discussion
 
 ---
-class: middle, has-header
+<br/>
 
-## Results
+- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
+
+.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
 ---
-class: middle, has-header
+count:false
+<br/>
 
-## Limitations
+- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
+- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
 
-<!-- The need for caching the image embedding due to the heavy processing thereof limits the ability to be used as a true foundation model -->
+.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
+
+---
+count:false
+<br/>
+
+- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
+- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
+  - which may limit the compositionality put forward
+
+.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
+
+---
+count:false
+<br/>
+
+- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
+- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
+  - which may limit the compositionality put forward
+- **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
+
+.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
+
+---
+count:false
+<br/>
+
+- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
+- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
+  - which may limit the compositionality put forward
+- **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
+- **Evaluation Context:** Impressive on general benchmarks but lacks comparative analysis against specialized domain-specific models
+
+.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
 ---
 class: middle, has-header
@@ -650,10 +682,11 @@ $\Rightarrow$ Segmentation is a hot-topic right now
   - SAM2 was released recently for video segmentation, which supports the point!
 ]
 
+
 ---
 class: middle, center
 
-# Thank you for your attention.
+# Thank you for your attention
 
 ---
 class: middle, black-slide, center
@@ -683,20 +716,74 @@ count: false
 class: middle, has-header
 count: false
 
-## SA-1B
+##  SA-1B
+
+.center.stretch[
+     ![](figures/segmentation_masks_1.png)
+     ![](figures/segmentation_masks_2.png)
+     ![](figures/segmentation_masks_3.png)
+]
+
+$11$ million images and over $1.1$ billion segmentation masks.
+
+.footnote[Adapted from [Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
+Diversity: The dataset is geographically diverse, covering images from various regions and economic groups. This diversity is intended to support the development of more equitable and fair models.
+
+Privacy Considerations: To protect privacy, faces and vehicle license plates in the images have been blurred. The dataset is released under a license that restricts attempts to identify individuals.
+
+Purpose: The primary goal of SA-1B is to serve as a comprehensive resource for training and evaluating segmentation models, particularly those designed for zero-shot learning and generalization to new tasks and datasets.
 
 ---
 class: middle, has-header
 count: false
 
-## Data Engine
+##  Data Engine
+
+.flex-container[
+  .flex-left[
+    ![Data Engine](./figures/data-engine.gif)
+  ]
+
+  .flex-right[
+    <ol style="margin-left: 20px; margin-top:150px; padding-left: 0;">
+      <li>Assisted-Manual Stage</li>
+      <li>Semi-Automatic Stage</li>
+      <li>Fully Automatic Stage</li>
+    </ol>
+  ]
+]
+
+
+
+???
+
+**Assisted-Manual Stage:**
+
+- In this stage, professional annotators manually labeled masks by clicking foreground/background points using an interactive segmentation tool powered by SAM.
+- The goal was to annotate objects freely, without semantic constraints, focusing on both "stuff" and "things."
+- Annotators were encouraged to label prominent objects first and move to the next image if annotation took too long.
+
+**Semi-Automatic Stage:**
+
+- This stage aimed to increase the diversity of masks by focusing annotators on less prominent objects.
+- SAM automatically generated confident masks for a subset of objects, and annotators labeled additional unannotated objects.
+- This approach increased the number of masks per image and improved the model's ability to segment a wide range of objects.
+
+**Fully Automatic Stage:**
+
+- In the final stage, annotation was fully automated. SAM generated masks without human input by prompting the model with a regular grid of foreground points.
+- The model predicted multiple valid masks for each point, and confident masks were selected based on stability and non-maximal suppression.
+- This stage produced the majority of the masks in SA-1B, ensuring high quality and diversity.
 
 ---
 class: middle
 count: false
 
 <!-- Additional Slides -->
-# SAM's Implementation Details (1/2)
+# SAM's Implementation Details
 
 - **Optimizer**: AdamW with weight decay of 0.1 and parameters $(\beta_1 = 0.9\), \(\beta_2 = 0.999\)$.
 - **Learning Rate**:
@@ -713,7 +800,7 @@ class: middle
 count: false
 
 <!-- Additional Slides -->
-# SAM's Implementation Details (2/2)
+<!-- # SAM's Implementation Details (2/2) -->
 
 - **Regularization**:
   - Drop path applied with a rate of $0.4$.
@@ -731,3 +818,15 @@ count: false
 
 <!-- Additional Slides -->
 # SAM 2
+
+---
+class: middle, has-header
+count: false
+
+## Video
+
+.center[
+<video loop controls preload="auto" height="600" width="600">
+  <source src="./figures/sam2.mp4" type="video/mp4">
+</video>
+]
