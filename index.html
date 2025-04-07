@@ -45,7 +45,13 @@
             ]});
         }
 
-      var slideshow = remark.create(options, renderMath);
+      var slideshow = remark.create(options, function() {
+        renderMath(); // Initial render
+      });
+
+      slideshow.on('showSlide', function() {
+        renderMath(); // Re-render math on each slide change
+      });
 
     </script>
   </body>

@@ -596,3 +596,57 @@ td {
 .custom-title.has-header h1 {
   margin-top: 20px;
 }
+
+/* Add this to your style.css file */
+.flex-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.flex-left {
+  flex: 1.2;
+  margin-right: 15px;
+}
+
+.flex-right {
+  flex: 0.8;
+  margin-left: 15px;
+}
+
+/* Fix for image display in flex containers */
+.flex-left img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Add this to your style.css file */
+.flex-container {
+  display: flex;
+  align-items: flex-start;  /* Align items at the top */
+  justify-content: space-between;
+  width: 100%;
+}
+
+.flex-left {
+  flex: 1.2;  /* Takes up slightly more space */
+  margin-right: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex-right {
+  flex: 0.8;  /* Takes up slightly less space */
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Fix for width classes inside flex containers */
+.flex-left img, .flex-right img {
+  width: 100% !important;
+  height: auto !important;
+}

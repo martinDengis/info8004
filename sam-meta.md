@@ -164,7 +164,7 @@ class: class: has-header
 
 Let's see what it can do: 
 
-.center[DEMO]
+.center[DEMO VIDEO TO ADD]
 
 ---
 class: middle
@@ -200,8 +200,12 @@ class: middle, has-header
 
 ???
 
-This is the foundation of SAM's approach - taking various forms of input prompts and generating appropriate segmentation masks in response.
-Heavily inspired from the next-token prediction task in NLP models.
+The key idea here is to make segmentation interactive and universal.
+Instead of needing a separate model for each segmentation task, the Segment Anything Model (SAM) introduces a unified task: given any prompt, the model should return a valid mask.
+
+This prompt could be a point, a bounding box, a rough mask, or even a textual description—anything that gives a clue about what to segment.
+
+This level of flexibility sets the foundation for a generalist segmentation model
 
 ---
 class: middle, has-header
@@ -221,7 +225,15 @@ Finally, it also solves for ambiguity (more on that later).
 
 ???
 
-This task design is critical because it allows the model to work as a foundation model rather than a task-specific one. The analogy with next-token prediction in language models helps understand how SAM generalizes beyond its training.
+Why create this promptable setup? Because it mirrors what’s been successful in NLP.
+
+Think about models like GPT: they're trained to predict the next word, given a prompt. This task is general and flexible—it allows the model to be used for writing, summarization, translation, coding, and more. All through prompting.
+
+Segment Anything adopts this idea: instead of building a model that does only one kind of segmentation, it trains a model to respond to prompts. This allows it to generalize—to be adaptable, like GPT.
+
+Moreover, this design naturally supports pre-training at scale and zero-shot generalization—two crucial traits of foundation models.
+
+And finally, SAM is designed to handle ambiguity. For example, if a user clicks on a shirt, SAM might return the shirt, the person, or both—because all are valid interpretations depending on the intent. The idea is that at least one plausible mask should be returned, even when the prompt is vague.
 
 ---
 class: middle, has-header
@@ -243,10 +255,13 @@ class: middle, has-header
 
 ???
 
-The key innovation here is how the task design enables the model to generalize.
+In the pre-training phase, the model is exposed to a wide variety of prompts. It learns how to interpret them and generate valid masks in response. Importantly, it's not tied to any fixed class labels or datasets. Instead, it develops a general-purpose understanding of how to map prompts to masks.
 
-- During pre-training, model learns a general relationship between prompts and valid masks.
-- Then during inference, this learned relationship transfers to new data distributions and tasks by simply designing appropriate prompts.
+Once this is learned, zero-shot transfer becomes possible.
+
+For instance, you can pair SAM with another model—say, an object detector that detects people. That detector produces bounding boxes, and SAM uses those boxes as prompts to segment the people.
+
+This modularity and generalization are what allow SAM to be used across unseen tasks and datasets without fine-tuning.
 
 ---
 class: middle, has-header
@@ -265,6 +280,22 @@ class: middle, has-header
 ???
 
 Slide is more for reference → skip it!
+
+Here we draw connections between SAM and existing segmentation paradigms.
+
+First, interactive segmentation: SAM is built to be used interactively. A user can click on an image, and SAM will instantly return a mask. This is possible because the model runs in real time (∼50ms per prompt) and doesn't require retraining for each input.
+
+Second, SAM differs from typical multi-task models, which are trained on a fixed set of segmentation tasks and cannot generalize beyond that. SAM is not trained for specific classes—it's trained to respond to prompts, which makes it task-agnostic.
+
+Finally, SAM is composable. That means it can be plugged into larger systems:
+
+Combine it with an object detector to do instance segmentation.
+
+Pair it with a text model to enable text-guided segmentation.
+
+Let a human provide input (like clicks), and you have an interactive tool.
+
+This composability is key to its usefulness in practical systems.
 
 ---
 
@@ -448,54 +479,138 @@ class: middle, has-header
 
 ## Promptable architecture
 
-<!-- Promptable as required for a foundation model -->
-<!-- 3D output to solve for ambiguity -->
+- **Foundation model approach**: SAM accepts various prompt types (points, boxes, masks, text)
+- **Flexible input prompts**: Handles single points, multiple points, bounding boxes, rough masks
+- **Ambiguity resolution**: Uses prompt ensembles to disambiguate when multiple valid segmentations exist
+- **Prompt engineering**: Different prompt combinations yield different valid segmentation results
+
+???
+
+- SAM follows the foundation model paradigm by being adaptable to various downstream tasks
+- The model is designed to work with minimal supervision (single point) or more guidance (boxes/masks)
+- When faced with ambiguous objects (e.g., nested objects), SAM can produce multiple valid segmentations
 
 ---
 class: middle, has-header
 
 ## Dissociated Encoders
 
-<!-- Encoders' embeddings are reconciled at decoder level (at runtime!) with 3 attention layers  -->
-<!-- Image embedding is cached for amortizing the cost -->
+.center.width-85[![](figures/double-encoder.png)]
 
----
-class: middle, has-header
-
-## Losses
-
-<!-- TODO: add math formulations -->
-<!-- 2 loss functions are combined in a 20:1 ratio : Focal (+def) & Dice (+def) losses + math formulation -->
-<!-- SAM is class-agnostic, i.e. so we need to modify the classification Cross Entropy loss formulation -> Focal loss is a modified version thereof -->
-
-- Focal Loss + Dice Loss (20:1 ratio)
-  - Backpropagate only from the lowest-error mask
-- MSE for IoU prediction
+- **Computational efficiency**:
+  - Heavy image embedding computation performed once and cached
+  - Lightweight prompt processing enables real-time interaction
+  - Allows for multiple segmentations without re-encoding the image
 
 ???
 
-- SAM is class-agnostic, i.e. so we need to modify the classification Cross Entropy loss formulation -> Focal loss is a modified version thereof
-- Focal loss = helps with class imbalance by focusing on hard-to-classify pixels
-- Dice loss = optimizes the overlap between predicted and ground truth masks
+- **Two-stage architecture**:
+  - Image Encoder: Vision Transformer (ViT) converts images to embeddings
+  - Prompt Encoder: Processes various prompt types
+  - Mask Decoder: Fuses information at runtime with attention mechanisms
+
+- The separation of image and prompt encoding is key to SAM's interactive capabilities
+- Image processing happens just once (taking ~0.15 seconds on GPU) while prompt processing is extremely fast (~0.55ms on web-browser = CPU)
+- This design enables interactive applications where users can rapidly provide different prompts
 
 ---
 class: middle, has-header
 
 ## Training Algorithm
+.center.width-100[
+   ![Training Algorithm](./figures/train_algo.png)
+  ]
 
-- Simulates interactive segmentation
-- 11 iterations per example:
-  1. Initial prompt (point or box)
-  2. 8 iterative points from error regions
-  3. 2 iterations with previous mask only
-- Lightweight decoder enables many iterations per batch
-- *Multiple prompts*: Use dedicated output token to reduce ambiguity
+
 
 ???
 
-- Skip slide?
-- The training approach is designed to mimic real-world interactive segmentation workflows. By having the model learn from its own errors through iterative refinement, it becomes more robust to various prompt types and ambiguous situations.
+SAM, employs a sophisticated training methodology designed to simulate interactive segmentation. This approach develops a robust foundation model capable of handling diverse and complex segmentation tasks.
 
+Training Phases:
+
+Initial Prompt Phase (Iteration 1):
+
+The process begins with an initial prompt, which is either a random foreground point (85% probability) or a bounding box around the target object (15% probability).
+This initial prompt serves as the starting point for the model to generate its first mask prediction.
+Error-Guided Refinement Phase (Iterations 2-9):
+
+In these iterations, the model computes error maps by comparing the predicted mask with the ground truth.
+It identifies false negative (FN) and false positive (FP) pixels, which represent areas where the prediction deviates from the ground truth.
+An adaptive sampling probability is calculated to decide whether to focus on FP or FN pixels. This probability is biased towards FN pixels to ensure the model captures all relevant parts of the object.
+For FN pixels, the model uses techniques like the maximum distance transform to select the most informative points, which are then added to the prompt set.
+This iterative process allows the model to learn from its mistakes and progressively improve the segmentation mask.
+Mask-Only Refinement Phase (Iterations 10-11):
+
+In the final iterations, the model uses the previously predicted mask as the sole prompt, without adding new points.
+This phase emphasizes autonomous refinement, teaching the model to improve its predictions without additional human guidance.
+It helps the model generalize and adapt, even when initial predictions are poor.
+---
+class: middle, has-header
+
+## Losses
+
+- **Focal Loss:** $$FL(p_t) = -\alpha(1 - p_t)^\gamma \log(p_t) \quad \quad $$
+.smaller-xx[(from Lin et al. 2018)]
+
+- **Dice Loss:** 
+  $$DL(P, G) = 1 - \frac{2 \sum_i^N p_i g_i}{\sum_i^N p_i^2 + \sum_i^N g_i^2}$$
+  .smaller-xx[(from Milletari et al. 2016)]
+
+- **Combined in 20:1 ratio**:
+$$\mathcal{L} = 20 \cdot FL + DL$$
+
+- **Ambiguity handling**: Backpropagates only from lowest-error mask prediction
+
+???
+
+The training of SAM is guided by a combination of loss functions designed to address the challenges of image segmentation, particularly the imbalance between foreground and background pixels.
+
+**Focal Loss:**
+with $\gamma = 2.0, \alpha = 0.25$
+- Focal Loss is designed to address the severe class imbalance between foreground and background pixels.
+- It modifies the standard cross-entropy loss to down-weight easy examples and focus on challenging ones, making it class-agnostic.
+- This helps the model pay more attention to boundary errors and other difficult regions.
+
+**Dice Loss:**
+
+- Dice Loss optimizes the direct overlap between the predicted and ground truth masks.
+- It is less sensitive to class imbalance compared to pixel-wise losses and encourages better boundary prediction.
+- Dice Loss directly optimizes the Intersection over Union (IoU), ensuring high-quality masks.
+
+**Combined Loss:**
+
+- The total loss is a linear combination of Focal Loss and Dice Loss, with a 20:1 ratio.
+- This combination balances pixel-level and mask-level quality, ensuring that the model produces accurate and precise segmentation masks.
+
+**Ambiguity Handling:**
+
+During training, the model backpropagates only from the lowest-error mask prediction.
+This approach helps the model handle multiple valid interpretations and reduces ambiguity in the segmentation process.
+
+---
+class: middle, has-header
+
+## Zero-shot learning
+
+.center.width-100[![Zero Shot Learning 2](figures/ZSL2.png)]
+
+???
+
+- **Domain generalization**:
+  - Trained on diverse dataset of 11M images and 1.1B masks
+  - Performs well on unseen domains without fine-tuning
+  - Demonstrates strong performance across medical, satellite, and specialized imagery
+
+- **Task adaptation**:
+  - Functions as foundation for downstream tasks without task-specific training
+  - Can be applied to object detection, instance segmentation, semantic segmentation
+  - Adaptable to video segmentation with minimal modification
+
+- **Limitations**:
+  - Performance varies by domain distance from training distribution
+  - Struggles with highly specialized imagery without additional prompting
+  - May require prompt engineering for optimal results in certain domains
 ---
 class: middle, has-header
 
@@ -563,6 +678,52 @@ count: false
 
 <!-- Additional Slides -->
 # SA-1B Dataset and Data Engine
+
+---
+class: middle, has-header
+count: false
+
+## SA-1B
+
+---
+class: middle, has-header
+count: false
+
+## Data Engine
+
+---
+class: middle
+count: false
+
+<!-- Additional Slides -->
+# SAM's Implementation Details (1/2)
+
+- **Optimizer**: AdamW with weight decay of 0.1 and parameters $(\beta_1 = 0.9\), \(\beta_2 = 0.999\)$.
+- **Learning Rate**:
+  - Initial learning rate of $8e-4$ after a linear warmup of $250$ iterations.
+  - Cosine decay schedule with step-wise reductions at $60k$ and $86,666$ iterations by a factor of $10$.
+- **Gradient Clipping**: Applied at a norm of $0.01$ to stabilize training.
+- **Mixed Precision Training**: Utilized to optimize computational efficiency and memory usage.
+- **Data Augmentation**:
+  - Extensive augmentation techniques including random resizing, cropping, and flipping.
+  - Large-scale jitter with a scale range of $[0.1, 2.0]$ when training data is limited.
+
+---
+class: middle
+count: false
+
+<!-- Additional Slides -->
+# SAM's Implementation Details (2/2)
+
+- **Regularization**:
+  - Drop path applied with a rate of $0.4$.
+  - Layer-wise learning rate decay of $0.8$.
+- **Batch Size**: $256$ images distributed across $256$ GPUs.
+- **Image Encoding**:
+  - Specialized caching system to amortize image encoding costs.
+  - Training with up to 64 randomly sampled masks per GPU to manage memory usage.
+- **Initialization**: Pre-trained from an MAE ViT-H model.
+- **Training Duration**: $90k$ iterations, equivalent to approximately $2$ epochs over the SA-1B dataset.
 
 ---
 class: middle
