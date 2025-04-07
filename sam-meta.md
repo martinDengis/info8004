@@ -313,23 +313,6 @@ class: middle
 ---
 class: middle, has-header
 
-## Model Overview
-
-Three main components:
-
-  1. **Image Encoder**: Vision Transformer to create image embeddings
-  2. **Prompt Encoder**: Converts different prompt types into embeddings
-  3. **Mask Decoder**: Lightweight transformer that combines embeddings to produce masks
-
-???
-
-- The separation of image encoding from prompt encoding allows for computation reuse - crucial for interactive applications.
-- It also ensures that embeddings are informationally rich as they are not aware of each others until decoding.
-
----
-
-class: middle, has-header
-
 ## Image Encoder
 
 - **Base Architecture**: Vision Transformer (ViT-H/16) pre-trained on MAE*
@@ -418,39 +401,34 @@ class: middle, has-header
 ## Handling Ambiguity
 
 .red[Problem]: Single prompts often have multiple valid interpretations
+.green[Solution]:
 
-1. *Naive Solution*: Averaging over multiple possible interpretations...
-.center[but it would create blurry, invalid masks]
-2. *Better Solution*:
-
-???
-
-Ambiguity handling is a key innovation in SAM. Rather than averaging over multiple possible interpretations (which would create blurry, invalid masks), the model explicitly predicts multiple possible masks and ranks them by confidence.
-
----
-class: middle
+<br/>
 
 .width-95[![](figures/architecture_flat_decoder_out_mask.png)]
 .center.italic[Predict *multiple masks* simultaneously (default: 3)]
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
+???
+
+Naive approach: Averaging over multiple possible interpretations... but it would create blurry, invalid masks
+
 ---
-class: middle
-count: false
+class: middle, has-header
+count:false
+
+## Handling Ambiguity
+
+.red[Problem]: Single prompts often have multiple valid interpretations
+.green[Solution]:
+
+<br/>
 
 .center.stretch[![](figures/architecture_flat_decoder_out_tuple.png)]
 .center.italic[Use *IoU* prediction head to rank masks]
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
-
----
-class: middle
-
-.center.width-85[![](figures/iou.png)]
-.center.italic[Intersection over Union (~confidence score)]
-
-.footnote[[IdiotDeveloper](https://idiotdeveloper.com/what-is-intersection-over-union-iou/), 2023]
 
 ---
 class: middle
@@ -627,7 +605,7 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
+- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
 
 .footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
@@ -636,9 +614,10 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
-- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
-  - which may limit the compositionality put forward
+- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible...
+  - but initial encoding remains computationally expensive, limiting deployment options
+  - may limit the compositionality put forward
 
 .footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
@@ -647,9 +626,10 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
-- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
-  - which may limit the compositionality put forward
+- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible...
+  - but initial encoding remains computationally expensive, limiting deployment options
+  - may limit the compositionality put forward
 - **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
 
 .footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
@@ -659,11 +639,12 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility for diverse use-cases, but requires careful prompt engineering to avoid over-segmentation
-- **Inference Speed:** Real-time interaction is possible, though the initial encoding remains computationally expensive, limiting deployment options
-  - which may limit the compositionality put forward
+- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
+- **Inference Speed:** Real-time interaction is possible...
+  - but initial encoding remains computationally expensive, limiting deployment options
+  - may limit the compositionality put forward
 - **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
-- **Evaluation Context:** Impressive on general benchmarks but lacks comparative analysis against specialized domain-specific models
+- **Evaluation Context:** Impressive results but comparative analysis against other models is sometimes a bit dubious
 
 .footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
@@ -699,9 +680,21 @@ class: middle
 count: false
 
 <!-- Additional Slides -->
-# IoU Score Approximation
+# IoU Score
+
+.center.width-85[![](figures/iou.png)]
+.center.italic[Intersection over Union (~confidence score)]
+
+.footnote[[IdiotDeveloper](https://idiotdeveloper.com/what-is-intersection-over-union-iou/), 2023]
+---
+class:middle, has-header
+count:false
+
+## IoU Score .italic[Estimates]
 
 .center.stretch[![](figures/mask_decoder.png)]
+
+.center[MLP for IoU works on an additional output token!]
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
