@@ -445,6 +445,7 @@ class: middle, has-header
 - **Flexible input prompts**: Handles single points, multiple points, bounding boxes, rough masks
 - **Ambiguity resolution**: Uses prompt ensembles to disambiguate when multiple valid segmentations exist
 - **Prompt engineering**: Different prompt combinations yield different valid segmentation results
+  - the criticality thereof is maybe not highlighted enough in the paper
 
 ???
 
@@ -605,16 +606,6 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
-
-.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
-
----
-count:false
-<br/>
-
-- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
 - **Inference Speed:** Real-time interaction is possible...
   - but initial encoding remains computationally expensive, limiting deployment options
   - may limit the compositionality put forward
@@ -626,7 +617,6 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
 - **Inference Speed:** Real-time interaction is possible...
   - but initial encoding remains computationally expensive, limiting deployment options
   - may limit the compositionality put forward
@@ -639,7 +629,6 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Promptable Interface:** Offers flexibility, but requires careful prompt engineering to avoid over-segmentation
 - **Inference Speed:** Real-time interaction is possible...
   - but initial encoding remains computationally expensive, limiting deployment options
   - may limit the compositionality put forward
@@ -660,7 +649,7 @@ class: middle, has-header
 $\Rightarrow$ Segmentation is a hot-topic right now
 - from self-driving cars
 - to Meta's push towards mixed augmented reality
-  - SAM2 was released recently for video segmentation, which supports the point!
+  - SAM2 (video-enabled) was released recently, which supports the point!
 ]
 
 
