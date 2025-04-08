@@ -163,10 +163,11 @@ class: class: has-header
 
 ## Quick Demo
 
-Let's see what it can do:
-
-.center[DEMO VIDEO TO ADD]
-
+.center[
+<video controls preload="auto" height="600" width="700">
+  <source src="./figures/sam_demo.mp4" type="video/mp4">
+</video>
+]
 ---
 class: middle
 
