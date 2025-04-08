@@ -449,9 +449,7 @@ class: middle, has-header
 
 ???
 
-- SAM follows the foundation model paradigm by being adaptable to various downstream tasks
-- The model is designed to work with minimal supervision (single point) or more guidance (boxes/masks)
-- When faced with ambiguous objects (e.g., nested objects), SAM can produce multiple valid segmentations
+SAM embodies the foundation model approach through its versatile promptable architecture, trained on massive datasets to handle diverse segmentation tasks with remarkable flexibility. The model accepts various input prompts—from single points to bounding boxes and rough masks—and intelligently handles ambiguity through prompt ensembles when multiple valid segmentations exist. While the paper demonstrates how different prompt combinations yield different segmentation results, it somewhat understates the critical importance of prompt engineering in practical applications, which becomes essential when guiding the model toward specific interpretations in complex scenes.
 
 ---
 class: middle, has-header
@@ -574,7 +572,6 @@ class: middle, has-header
 - **Limitations**:
   - Performance varies by domain distance from training distribution
   - Struggles with highly specialized imagery without additional prompting
-  - May require prompt engineering for optimal results in certain domains
 
 ---
 class: middle, has-header
@@ -588,6 +585,15 @@ SAM was evaluated on several **zero-shot transfer** experiments to demonstrate i
 3. Object Proposals
 4. Instance Segmentation
 5. Text-to-Mask (Proof of Concept)
+
+???
+
+SAM demonstrated impressive zero-shot transfer capabilities across multiple tasks without any fine-tuning. 
+- For **Single-Point Mask Prediction**, SAM was compared against interactive segmentation models like RITM and SimpleClick on the DAVIS dataset, achieving competitive results despite not being specifically designed for this purpose.
+- In **Edge Detection**, SAM was evaluated against specialized edge detectors like HED and Canny on the BSDS500 benchmark. Using point-grid prompts at varying densities, SAM outperformed these dedicated edge detectors, reaching state-of-the-art performance with optimal grid spacing.
+- For **Object Proposals**, SAM was benchmarked against MCG on the COCO dataset, where it generated high-quality masks that achieved better average recall, particularly excelling on rare object categories. This comparison involved generating a fixed number of mask proposals per image and evaluating their coverage of ground truth objects.
+- In **Instance Segmentation**, SAM was evaluated on COCO against fully supervised methods like Mask R-CNN. While not matching supervised approaches, SAM achieved over 46% AP at IoU 0.5 without any COCO-specific training, showcasing its strong generalization capabilities.
+- The **Text-to-Mask** experiment combined SAM with CLIP to enable textual prompting. This proof-of-concept demonstrated that SAM could be integrated with text models to generate masks for objects described in natural language, expanding its accessibility to non-visual prompts.
 
 ---
 class: middle
@@ -659,6 +665,12 @@ class: middle, has-header
 ## Conclusion
 
 .center.width-100[![Zero Shot Learning 2](figures/conclusion.png)]
+
+???
+
+SAM's impact extends beyond academic research, enabling new applications in medical imaging, autonomous systems, content creation, and data annotation. By dramatically reducing the barriers to high-quality segmentation, SAM democratizes access to capabilities previously requiring significant expertise and computational resources.
+
+As foundation models continue transforming computer vision, SAM stands as a powerful example of how scale, architectural innovation, and thoughtful training methodology can create systems with remarkable generalization capabilities. The future of segmentation will undoubtedly build upon SAM's contributions, further bridging the gap between human visual understanding and computer vision systems.
 
 ---
 class: middle, center
@@ -799,6 +811,84 @@ count: false
   - Training with up to 64 randomly sampled masks per GPU to manage memory usage.
 - **Initialization**: Pre-trained from an MAE ViT-H model.
 - **Training Duration**: $90k$ iterations, equivalent to approximately $2$ epochs over the SA-1B dataset.
+
+---
+class: middle
+count: false
+
+<!-- Additional Slides -->
+# Zero Shot Learning Results
+
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Single Point Valid Mask Evaluation 
+
+.center.width-100[![Zero Shot Results 1](figures/zsl-results-1.png)]
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+Single-Point Mask Prediction: This experiment tests if SAM can generate a complete object mask when given just a single point click inside the object. It's similar to how someone might click on an object in Photoshop and expect the whole object to be selected. SAM was compared against interactive segmentation models like RITM and SimpleClick on the DAVIS dataset, achieving competitive results.
+
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Edge Detection
+
+.center.width-100[![Zero Shot Results 2](figures/zsl-results-2.png)]
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
+Edge Detection: This experiment evaluates SAM's ability to identify boundaries between objects or regions in an image - essentially finding where one object ends and another begins. Using point-grid prompts at different densities, SAM outperformed specialized edge detectors like HED and Canny on the BSDS500 benchmark.
+
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Object Proposals 
+
+.center.width-100[![Zero Shot Results 3](figures/zsl-results-3.png)]
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
+Object Proposals: This test examines SAM's capability to automatically suggest potential objects in an image without specific prompting. The system generates multiple mask suggestions per image, which is useful for downstream tasks like object detection. SAM outperformed MCG on the COCO dataset, showing better average recall, especially for uncommon object categories.
+
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Instance Segmentation
+
+.center.stretch[
+     ![](figures/zsl-results-4_1.png)
+     ![](figures/zsl-results-4_2.png)
+]
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
+Instance Segmentation: This experiment tests if SAM can identify and create separate masks for individual objects of the same class (like separating each person in a crowd). While not matching fully supervised methods like Mask R-CNN, SAM achieved over 46% AP at IoU 0.5 on COCO without any specific training.
+
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Text-to-Mask
+
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
+Text-to-Mask: This proof-of-concept demonstrates the integration of SAM with text models like CLIP, allowing users to describe an object in words (e.g., "the red car") and have SAM generate the appropriate mask. This expands SAM's usefulness beyond visual prompts to language-based interactions.
 
 ---
 class: middle
