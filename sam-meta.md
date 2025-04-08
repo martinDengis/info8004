@@ -654,6 +654,13 @@ $\Rightarrow$ Segmentation is a hot-topic right now
 
 
 ---
+class: middle, has-header
+
+## Conclusion
+
+.center.width-100[![Zero Shot Learning 2](figures/conclusion.png)]
+
+---
 class: middle, center
 
 # Thank you for your attention
@@ -743,7 +750,6 @@ count: false
 ???
 
 **Assisted-Manual Stage:**
-
 - In this stage, professional annotators manually labeled masks by clicking foreground/background points using an interactive segmentation tool powered by SAM.
 - The goal was to annotate objects freely, without semantic constraints, focusing on both "stuff" and "things."
 - Annotators were encouraged to label prominent objects first and move to the next image if annotation took too long.
@@ -805,7 +811,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Video
+## Video 
 
 .center[
 <video loop controls preload="auto" height="600" width="600">
