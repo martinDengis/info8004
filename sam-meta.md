@@ -374,7 +374,7 @@ class: middle, has-header
 ## Mask Decoder
 
 - **Inputs**: *Image* and prompt (*token*) embeddings
-- **Attention Block (2x)**:
+- **Attention Block (x2)**:
   1. Self-attention among tokens
   2. Cross-attention between tokens and image embedding
   3. Point-wise MLP updates each token
@@ -482,7 +482,7 @@ class: middle, has-header
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-2.png)]
 
@@ -492,7 +492,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-3.png)]
 
@@ -502,7 +502,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-4.png)]
 
@@ -512,7 +512,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-5.png)]
 
@@ -522,7 +522,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-6.png)]
 
@@ -532,7 +532,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Training  Algorithm 
+## Training  Algorithm
 
 .center.stretch[![](figures/training-7.png)]
 
