@@ -124,11 +124,7 @@ class: middle, has-header
 
 ## Zero-shot Learning
 
-.center[
-.width-100[
-![Zero-Shot Learning](./figures/zsl.png)
-]
-]
+# The ability to successfully perform new tasks without any task-specific training or fine-tuning.
 
 ???
 
@@ -196,7 +192,6 @@ class: middle, has-header
 
 - **What**: Generate valid segmentation masks for *any* prompt
 - **Prompt Types**: Points & bounding boxes (*sparse prompts*), masks (*dense prompts*), text (PoC).
-- **Validity**: Even *ambiguous* prompts should yield reasonable masks
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
@@ -722,6 +717,18 @@ $11$ million images and over $1.1$ billion segmentation masks.
 
 .footnote[Adapted from [Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
+---
+class: middle, has-header
+count: false
+
+## Zero-Shot Single Point Valid Mask Evaluation
+
+.center.width-100[![Table_geo](figures/dataset_geo.png)]
+
+.footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
+
+???
+
 ???
 
 Diversity: The dataset is geographically diverse, covering images from various regions and economic groups. This diversity is intended to support the development of more equitable and fair models.
@@ -888,6 +895,7 @@ count: false
 
 ## Zero-Shot Text-to-Mask
 
+.center.width-100[![Zero Shot Results 5](figures/zsl-results-5.png)]
 
 .footnote[[Kirillov et al.](https://arxiv.org/abs/2304.02643), 2023]
 
