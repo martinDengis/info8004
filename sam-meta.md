@@ -378,14 +378,13 @@ class: middle, has-header
 
 ## Mask Decoder
 
-- **Process**:
-  1. Image embedding (64×64, 256-dimensional)
-  2. Prompt embeddings as tokens
-  3. Self-attention among tokens
-  4. Cross-attention between tokens and image embedding
-  5. Point-wise MLP updates each token
-  6. Cross-attention from image to tokens
-- **Upsampling**: 4× via transposed convolutions
+- **Inputs**: *Image* and prompt (*token*) embeddings
+- **Attention Block (2x)**:
+  1. Self-attention among tokens
+  2. Cross-attention between tokens and image embedding
+  3. Point-wise MLP updates each token
+  4. Cross-attention from image to tokens
+- **Post-processing** and **Prediction**
 
 .center.width-85[![](figures/mask_decoder.png)]
 
