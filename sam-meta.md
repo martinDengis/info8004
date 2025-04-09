@@ -237,7 +237,7 @@ Moreover, this design naturally supports pre-training at scale and zero-shot gen
 
 And finally, SAM is designed to handle ambiguity. For example, if a user clicks on a shirt, SAM might return the shirt, the person, or both—because all are valid interpretations depending on the intent. The idea is that at least one plausible mask should be returned, even when the prompt is vague.
 
----
+<!-- ---
 class: middle, has-header
 
 ## From Promptable Task to Zero-Shot Transfer
@@ -264,9 +264,9 @@ Once this is learned, zero-shot transfer becomes possible.
 
 For instance, you can pair SAM with another model—say, an object detector that detects people. That detector produces bounding boxes, and SAM uses those boxes as prompts to segment the people.
 
-This modularity and generalization are what allow SAM to be used across unseen tasks and datasets without fine-tuning.
+This modularity and generalization are what allow SAM to be used across unseen tasks and datasets without fine-tuning. -->
 
----
+<!-- ---
 class: middle, has-header
 
 ## Relation to Existing Tasks
@@ -298,7 +298,7 @@ Pair it with a text model to enable text-guided segmentation.
 
 Let a human provide input (like clicks), and you have an interactive tool.
 
-This composability is key to its usefulness in practical systems.
+This composability is key to its usefulness in practical systems. -->
 
 ---
 
@@ -504,8 +504,10 @@ This iterative process allows the model to learn from its mistakes and progressi
 Mask-Only Refinement Phase (Iterations 10-11):
 
 In the final iterations, the model uses the previously predicted mask as the sole prompt, without adding new points.
+
 This phase emphasizes autonomous refinement, teaching the model to improve its predictions without additional human guidance.
 It helps the model generalize and adapt, even when initial predictions are poor
+
 ---
 
 class: middle, has-header
@@ -551,7 +553,7 @@ with $\gamma = 2.0, \alpha = 0.25$
 During training, the model backpropagates only from the lowest-error mask prediction.
 This approach helps the model handle multiple valid interpretations and reduces ambiguity in the segmentation process.
 
----
+<!-- ---
 class: middle, has-header
 
 ## Zero-shot learning
@@ -572,7 +574,7 @@ class: middle, has-header
 
 - **Limitations**:
   - Performance varies by domain distance from training distribution
-  - Struggles with highly specialized imagery without additional prompting
+  - Struggles with highly specialized imagery without additional prompting -->
 
 ---
 class: middle, has-header
@@ -582,14 +584,16 @@ class: middle, has-header
 SAM was evaluated on several **zero-shot transfer** experiments to demonstrate its generality beyond promptable segmentation.
 
 1. Single-Point Mask Prediction
-2. Edge Detection
+2. .bold[Edge Detection]
 3. Object Proposals
 4. Instance Segmentation
-5. Text-to-Mask (Proof of Concept)
+5. .bold[Text-to-Mask] (Proof of Concept)
+
+- **Evaluation Context:** Impressive results but comparative analysis against other models is sometimes a bit dubious
 
 ???
 
-SAM demonstrated impressive zero-shot transfer capabilities across multiple tasks without any fine-tuning. 
+SAM demonstrated impressive zero-shot transfer capabilities across multiple tasks without any fine-tuning.
 - For **Single-Point Mask Prediction**, SAM was compared against interactive segmentation models like RITM and SimpleClick on the DAVIS dataset, achieving competitive results despite not being specifically designed for this purpose.
 - In **Edge Detection**, SAM was evaluated against specialized edge detectors like HED and Canny on the BSDS500 benchmark. Using point-grid prompts at varying densities, SAM outperformed these dedicated edge detectors, reaching state-of-the-art performance with optimal grid spacing.
 - For **Object Proposals**, SAM was benchmarked against MCG on the COCO dataset, where it generated high-quality masks that achieved better average recall, particularly excelling on rare object categories. This comparison involved generating a fixed number of mask proposals per image and evaluating their coverage of ground truth objects.
@@ -613,7 +617,7 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Inference Speed:** Real-time interaction is possible...
+- **Compositionality:** Real-time interaction is possible...
   - but initial encoding remains computationally expensive, limiting deployment options
   - may limit the compositionality put forward
 
@@ -624,23 +628,10 @@ count:false
 <br/>
 
 - **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Inference Speed:** Real-time interaction is possible...
+- **Compositionality:** Real-time interaction is possible...
   - but initial encoding remains computationally expensive, limiting deployment options
   - may limit the compositionality put forward
 - **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
-
-.footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
-
----
-count:false
-<br/>
-
-- **Generalization Capability:** Strong performance across domains without retraining *.italic[(... really?)]* $^1$
-- **Inference Speed:** Real-time interaction is possible...
-  - but initial encoding remains computationally expensive, limiting deployment options
-  - may limit the compositionality put forward
-- **Object Precision:** Handles common objects well but struggles with small or thin structures requiring domain-specific solutions
-- **Evaluation Context:** Impressive results but comparative analysis against other models is sometimes a bit dubious
 
 .footnote[[1] : ([Ali et al.](https://www.sciencedirect.com/science/article/pii/S0895611124001502), 2025)]
 
@@ -659,8 +650,8 @@ $\Rightarrow$ Segmentation is a hot-topic right now
   - SAM2 (video-enabled) was released recently, which supports the point!
 ]
 
-
----
+???
+<!-- ---
 class: middle, has-header
 
 ## Conclusion
@@ -671,7 +662,7 @@ class: middle, has-header
 
 SAM's impact extends beyond academic research, enabling new applications in medical imaging, autonomous systems, content creation, and data annotation. By dramatically reducing the barriers to high-quality segmentation, SAM democratizes access to capabilities previously requiring significant expertise and computational resources.
 
-As foundation models continue transforming computer vision, SAM stands as a powerful example of how scale, architectural innovation, and thoughtful training methodology can create systems with remarkable generalization capabilities. The future of segmentation will undoubtedly build upon SAM's contributions, further bridging the gap between human visual understanding and computer vision systems.
+As foundation models continue transforming computer vision, SAM stands as a powerful example of how scale, architectural innovation, and thoughtful training methodology can create systems with remarkable generalization capabilities. The future of segmentation will undoubtedly build upon SAM's contributions, further bridging the gap between human visual understanding and computer vision systems. -->
 
 ---
 class: middle, center
@@ -836,7 +827,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Zero-Shot Single Point Valid Mask Evaluation 
+## Zero-Shot Single Point Valid Mask Evaluation
 
 .center.width-100[![Zero Shot Results 1](figures/zsl-results-1.png)]
 
@@ -863,7 +854,7 @@ Edge Detection: This experiment evaluates SAM's ability to identify boundaries b
 class: middle, has-header
 count: false
 
-## Zero-Shot Object Proposals 
+## Zero-Shot Object Proposals
 
 .center.width-100[![Zero Shot Results 3](figures/zsl-results-3.png)]
 
@@ -914,7 +905,7 @@ count: false
 class: middle, has-header
 count: false
 
-## Video 
+## Video
 
 .center[
 <video loop controls preload="auto" height="600" width="600">
