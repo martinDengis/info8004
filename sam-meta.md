@@ -642,7 +642,9 @@ class: middle, has-header
 
 - Meta is a company with plenty of resources
 - While they advocate for open-sourcing everything (e.g., *SA-1B* is a big contribution in that sense), they most potentially also have a political agenda to serve
-- SAM as the ".italic[first foundation model for segmentation]" is heavily emphasized. *Why is that?*
+
+# .center[*So why SAM?*]
+
 .pull-right[
 $\Rightarrow$ Segmentation is a hot-topic right now
 - from self-driving cars
