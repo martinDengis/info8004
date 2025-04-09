@@ -814,6 +814,18 @@ count: false
 - **Training Duration**: $90k$ iterations, equivalent to approximately $2$ epochs over the SA-1B dataset.
 
 ---
+class: middle, has-header
+count: false
+
+## Vision Transformer
+
+Backbone of the image encoder
+
+.center.width-100[![Vit](figures/ViT.png)]
+
+.footnote[[Dosovitskiy et al.](https://arxiv.org/abs/2010.11929), 2020]
+
+---
 class: middle
 count: false
 
