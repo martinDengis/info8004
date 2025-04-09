@@ -472,35 +472,71 @@ class: middle, has-header
 ---
 class: middle, has-header
 
-## Training Algorithm
+## Training  Algorithm
 
-.center.width-100[
-   ![Training Algorithm](./figures/train_algo.png)
-  ]
+.center.stretch[![](figures/training-1.png)]
 
-???
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
 
-SAM, employs a sophisticated training methodology designed to simulate interactive segmentation. This approach develops a robust foundation model capable of handling diverse and complex segmentation tasks.
+---
+class: middle, has-header
+count: false
 
-Training Phases:
+## Training  Algorithm 
 
-Initial Prompt Phase (Iteration 1):
+.center.stretch[![](figures/training-2.png)]
 
-The process begins with an initial prompt, which is either a random foreground point (85% probability) or a bounding box around the target object (15% probability).
-This initial prompt serves as the starting point for the model to generate its first mask prediction.
-Error-Guided Refinement Phase (Iterations 2-9):
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
 
-In these iterations, the model computes error maps by comparing the predicted mask with the ground truth.
-It identifies false negative (FN) and false positive (FP) pixels, which represent areas where the prediction deviates from the ground truth.
-An adaptive sampling probability is calculated to decide whether to focus on FP or FN pixels. This probability is biased towards FN pixels to ensure the model captures all relevant parts of the object.
-For FN pixels, the model uses techniques like the maximum distance transform to select the most informative points, which are then added to the prompt set.
-This iterative process allows the model to learn from its mistakes and progressively improve the segmentation mask.
-Mask-Only Refinement Phase (Iterations 10-11):
+---
+class: middle, has-header
+count: false
 
-In the final iterations, the model uses the previously predicted mask as the sole prompt, without adding new points.
+## Training  Algorithm 
 
-This phase emphasizes autonomous refinement, teaching the model to improve its predictions without additional human guidance.
-It helps the model generalize and adapt, even when initial predictions are poor
+.center.stretch[![](figures/training-3.png)]
+
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
+
+---
+class: middle, has-header
+count: false
+
+## Training  Algorithm 
+
+.center.stretch[![](figures/training-4.png)]
+
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
+
+---
+class: middle, has-header
+count: false
+
+## Training  Algorithm 
+
+.center.stretch[![](figures/training-5.png)]
+
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
+
+---
+class: middle, has-header
+count: false
+
+## Training  Algorithm 
+
+.center.stretch[![](figures/training-6.png)]
+
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
+
+---
+class: middle, has-header
+count: false
+
+## Training  Algorithm 
+
+.center.stretch[![](figures/training-7.png)]
+
+.footnote[[Neural Breakdown with AVB](https://www.youtube.com/watch?v=OhxJkqD1vuE&t=304s&ab_channel=NeuralBreakdownwithAVB), 2023]
 
 ---
 
@@ -508,7 +544,7 @@ class: middle, has-header
 
 ## Losses
 
-- **Focal Loss:** $$FL(p_t) = -\alpha(1 - p_t)^\gamma \log(p_t) \quad \quad $$
+- **Focal Loss:** $$FL(p_t) = -(1 - p_t)^\gamma \log(p_t) \quad \quad $$
 .smaller-xx[(from Lin et al. 2018)]
 
 - **Dice Loss:**
@@ -518,7 +554,7 @@ class: middle, has-header
 - **Combined in 20:1 ratio**:
 $$\mathcal{L} = 20 \cdot FL + DL$$
 
-- **Ambiguity handling**: Backpropagates only from lowest-error mask prediction
+$ \Rightarrow $ Backpropagates only from lowest-error mask prediction
 
 ???
 
@@ -577,22 +613,22 @@ class: middle, has-header
 
 SAM was evaluated on several **zero-shot transfer** experiments to demonstrate its generality beyond promptable segmentation.
 
-1. Single-Point Mask Prediction
+1. .bold[Single-Point Mask Prediction]
 2. .bold[Edge Detection]
 3. Object Proposals
 4. Instance Segmentation
 5. .bold[Text-to-Mask] (Proof of Concept)
 
-- **Evaluation Context:** Impressive results but comparative analysis against other models is sometimes a bit dubious
+$\Rightarrow$ The results are impressive !
+<!-- - **Evaluation Context:** Impressive results but comparative analysis against other models is sometimes a bit dubious -->
 
 ???
 
-SAM demonstrated impressive zero-shot transfer capabilities across multiple tasks without any fine-tuning.
-- For **Single-Point Mask Prediction**, SAM was compared against interactive segmentation models like RITM and SimpleClick on the DAVIS dataset, achieving competitive results despite not being specifically designed for this purpose.
-- In **Edge Detection**, SAM was evaluated against specialized edge detectors like HED and Canny on the BSDS500 benchmark. Using point-grid prompts at varying densities, SAM outperformed these dedicated edge detectors, reaching state-of-the-art performance with optimal grid spacing.
-- For **Object Proposals**, SAM was benchmarked against MCG on the COCO dataset, where it generated high-quality masks that achieved better average recall, particularly excelling on rare object categories. This comparison involved generating a fixed number of mask proposals per image and evaluating their coverage of ground truth objects.
-- In **Instance Segmentation**, SAM was evaluated on COCO against fully supervised methods like Mask R-CNN. While not matching supervised approaches, SAM achieved over 46% AP at IoU 0.5 without any COCO-specific training, showcasing its strong generalization capabilities.
-- The **Text-to-Mask** experiment combined SAM with CLIP to enable textual prompting. This proof-of-concept demonstrated that SAM could be integrated with text models to generate masks for objects described in natural language, expanding its accessibility to non-visual prompts.
+**Single-Point Mask Prediction**: In experiments, SAM achieved higher mIoU scores on 16 out of 23 diverse datasets compared to the RITM baseline, with improvements of up to 47 IoU points. Human evaluations further confirmed SAM's superiority, with annotators consistently rating SAM's masks between 7 and 9 on a 10-point scale, indicating high-quality segmentation with minor errors.
+
+**Edge Detection**: On the BSDS500 dataset, SAM produced edge maps with high recall at 50% precision, capturing more edges than the ground truth annotations. Although it lagged behind state-of-the-art methods trained specifically for edge detection, SAM outperformed early deep learning methods and prior zero-shot techniques, demonstrating its robustness in detecting edges without task-specific training.
+
+**Text-to-Mask Segmentation**: SAM successfully segmented objects based on text prompts, such as "a wheel" or "beaver tooth grille," showcasing its ability to interpret and act on textual descriptions. This capability was achieved by leveraging CLIP embeddings during training, allowing SAM to align image and text embeddings effectively, even without explicit text supervision during training.
 
 ---
 class: middle
