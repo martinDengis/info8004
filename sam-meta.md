@@ -186,9 +186,9 @@ All combined, they gave rise to the .bold[*Segment Anything Model (SAM)*] - .ita
 ---
 class: middle, has-header
 
-## Promptable Segmentation Task
+# Promptable Segmentation Task
 
-.center.width-65[![](./figures/prompt_examples.png)]
+.center.width-55[![](./figures/prompt_examples.png)]
 
 - **What**: Generate valid segmentation masks for *any* prompt
 - **Prompt Types**: Points & bounding boxes (*sparse prompts*), masks (*dense prompts*), text (PoC).
@@ -205,9 +205,7 @@ This prompt could be a point, a bounding box, a rough mask, or even a textual de
 This level of flexibility sets the foundation for a generalist segmentation model
 
 ---
-class: middle, has-header
-
-## Promptable Segmentation Task
+class: middle
 
 .question[Why Promptable Segmentation?]
 
@@ -578,6 +576,7 @@ with $\gamma = 2.0, \alpha = 0.25$
 - The total loss is a linear combination of Focal Loss and Dice Loss, with a 20:1 ratio.
 - This combination balances pixel-level and mask-level quality, ensuring that the model produces accurate and precise segmentation masks.
 
+
 **Ambiguity Handling:**
 
 During training, the model backpropagates only from the lowest-error mask prediction.
@@ -589,8 +588,6 @@ class: middle, has-header
 ## Zero-shot learning
 
 .center.width-100[![Zero Shot Learning 2](figures/ZSL2.png)]
-
-???
 
 - **Domain generalization**:
   - Trained on diverse dataset of 11M images and 1.1B masks
