@@ -6,7 +6,9 @@ This repository contains **markdown-based presentations** for scientific papers,
 
 1. **[Segment Anything Model (SAM) – Meta](sam-meta.md)**
   - Introduction of necessary **background knowledge**
-  - Overview of the Model Architecture
+  - Paper Overview
+  - Promptable **Segmentation Task**
+  - Model **architecture**
   - Key Particularities
     - solving for **ambiguity**,
     - **attention** layers,
