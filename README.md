@@ -33,9 +33,9 @@ If you’d like to suggest additional paper presentations to this repo, feel fre
 
 ## Credits
 
-The markdown-based presentation capability hereby used is largely inspired by classes repos of our professor @glouppe.
+The markdown-based presentation capability hereby used is largely inspired by classes repos of our professor [@glouppe](https://github.com/glouppe).
 
 ## Authors
 
-- @martinDengis
-- @giooms
+- [@martinDengis](https://github.com/martinDengis)
+- [@giooms](https://github.com/giooms)
